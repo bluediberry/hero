@@ -27,20 +27,24 @@ public class Hero {
         this.pos.setY(y);
     }
 
-    public void moveUp(){
-        this.pos.moveUp();
+    public Position moveUp(){
+        return this.pos.moveUp();
     }
 
-    public void moveDown(){
-        this.pos.moveDown();
+    public Position moveDown(){
+        return this.pos.moveDown();
     }
 
-    public void moveLeft(){
-        this.pos.moveLeft();
+    public Position moveLeft(){
+        return this.pos.moveLeft();
     }
 
-    public void moveRight(){
-        this.pos.moveRight();
+    public Position moveRight(){
+       return this.pos.moveRight();
+    }
+
+    public void setPosition(Position pos){
+       this.pos = pos;
     }
 
     public void draw(Screen screen) {
