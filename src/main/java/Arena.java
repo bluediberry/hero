@@ -10,6 +10,8 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Arena {
 
@@ -17,6 +19,8 @@ public class Arena {
     private int height;
     private Screen screen;
     private Hero character;
+    private List<Wall> walls;
+
 
     Arena(int width, int height) throws IOException {
         Terminal terminal = new DefaultTerminalFactory().createTerminal();
@@ -27,16 +31,17 @@ public class Arena {
         screen.doResizeIfNecessary();     // resize screen if necessary
         this.width = width;
         this.height = height;
+        this.walls = createWalls();
         this.character = new Hero(10,10);
     }
 
 
     private boolean canMoveHero(Position pos){
-        return pos.getX() >= 0 && pos.getX() <= width && pos.getY() >= 0 && pos.getY() <= height;
+        return pos.getX() >= 0 && pos.getX() <= width - 1  && pos.getY() >= 0 && pos.getY() <= height - 1;
     }
 
     public void moveHero(Position pos){
-        if(canMoveHero(pos)){
+        if(this.canMoveHero(pos)){
         this.character.setPosition(pos);
         }
     }
@@ -44,6 +49,8 @@ public class Arena {
     protected void draw(TextGraphics graphics){
         graphics.setBackgroundColor(TextColor.Factory.fromString("#336699"));
         graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
+        for (Wall wall : walls)
+            wall.draw(graphics);
         this.character.draw(graphics);
     }
 
@@ -71,6 +78,19 @@ public class Arena {
 
         }
 
+    }
+
+    private List<Wall> createWalls(){
+        List<Wall> walls = new ArrayList<>();
+        for(int c = 0; c < width; c++){
+            walls.add(new Wall(c, 0));
+            walls.add(new Wall(c, this.height - 1));
+        }
+        for(int w = 0; w < height - 1; w++){
+            walls.add(new Wall(0, w));
+            walls.add(new Wall(this.width - 1, w));
+        }
+        return walls;
     }
 
 

@@ -5,14 +5,13 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.screen.Screen;
 
-public class Hero {
+public class Hero{
 
     private Position pos;
     private TextCharacter character;
 
     Hero(int x, int y){
         this.pos = new Position(x,y);
-        this.character = new TextCharacter('X');
     }
 
     public int getX(){
