@@ -1,3 +1,7 @@
+import com.googlecode.lanterna.TerminalPosition;
+import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
@@ -10,11 +14,11 @@ import java.io.IOException;
 public class Arena {
 
     private int width;
-    private int heigth;
+    private int height;
     private Screen screen;
     private Hero character;
 
-    Arena(int width, int heigth) throws IOException {
+    Arena(int width, int height) throws IOException {
         Terminal terminal = new DefaultTerminalFactory().createTerminal();
         screen = new TerminalScreen(terminal);
 
@@ -22,13 +26,13 @@ public class Arena {
         screen.startScreen();             // screens must be started
         screen.doResizeIfNecessary();     // resize screen if necessary
         this.width = width;
-        this.heigth = heigth;
+        this.height = height;
         this.character = new Hero(10,10);
     }
 
 
     private boolean canMoveHero(Position pos){
-        return pos.getX() >= 0 && pos.getX() <= width && pos.getY() >= 0 && pos.getY() <= heigth;
+        return pos.getX() >= 0 && pos.getX() <= width && pos.getY() >= 0 && pos.getY() <= height;
     }
 
     public void moveHero(Position pos){
@@ -37,28 +41,14 @@ public class Arena {
         }
     }
 
-    private void draw() throws IOException{
-        screen.clear();
-        this.character.draw(screen);
-        screen.refresh();
+    protected void draw(TextGraphics graphics){
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#336699"));
+        graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
+        this.character.draw(graphics);
     }
 
-    public void run() throws IOException {
-        KeyStroke key = null;
-        boolean open = true;
 
-            while(open){
-                this.draw();
-                key = screen.readInput();
-
-                this.processKey(key);
-                if(key.getKeyType() == KeyType.EOF){
-                    open = false;
-                }
-            }
-    }
-
-    private void processKey(KeyStroke key) throws IOException {
+    protected void processKey(KeyStroke key) throws IOException {
 
         switch (key.getKeyType()){
             case ArrowUp:
