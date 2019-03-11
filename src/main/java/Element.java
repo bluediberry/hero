@@ -1,27 +1,19 @@
-import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
-public class Element {
+public abstract class Element {
+    protected Position position;
 
-    protected Position pos;
-
-    Element(int x, int y){
-        this.pos = new Position(x,y);
+    public Element(int x, int y) {
+        position = new Position(x, y);
     }
 
-
-    public void draw(TextGraphics graphics) {
-        graphics.putString(new TerminalPosition(pos.getX(), pos.getY()), "X");
+    public Position getPosition() {
+        return position;
     }
 
-    public int getX(){
-        return this.pos.getX();
-    }
-    public int getY(){
-        return this.pos.getY();
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
-    public boolean equals(Position pos) {
-        return this.getX() == pos.getX() && this.getY() == pos.getY();
-    }
+    public abstract void draw(TextGraphics graphics);
 }
