@@ -37,7 +37,15 @@ public class Arena {
 
 
     private boolean canMoveHero(Position pos){
-        return pos.getX() >= 0 && pos.getX() <= width - 1  && pos.getY() >= 0 && pos.getY() <= height - 1;
+        if (pos.getX() < 0) return false;
+        if (pos.getX() > width - 1) return false;
+        if (pos.getY() < 0) return false;
+        if (pos.getY() > height - 1) return false;
+
+        for (Wall wall : walls)
+            if (wall.getPosition().equals(pos)) return false;
+
+        return true;
     }
 
     public void moveHero(Position pos){

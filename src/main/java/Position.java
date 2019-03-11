@@ -38,5 +38,17 @@ public class Position {
     public Position moveRight() {
         return new Position(this.getX() + 1, this.getY());
     }
+
+    @Override
+    public boolean equals(Object o){
+        if (this == o) return true;
+
+        if (o == null) return false;
+
+        if (getClass() != o.getClass()) return false;
+
+        Position p = (Position) o;
+        return x == p.getX() && y == p.getY();
+    }
 }
 

@@ -9,9 +9,16 @@ public class Wall {
         this.pos = new Position(x,y);
     }
 
+    public Position getPosition() {
+        return pos;
+    }
+
+    public void setPosition(Position position) {
+        this.pos = position;
+    }
 
     public void draw(TextGraphics graphics) {
-        graphics.setForegroundColor(TextColor.Factory.fromString("#000000"));
-        graphics.putString(new TerminalPosition(pos.getX(), pos.getY()), ".");
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#FF5722"));
+        graphics.putString(new TerminalPosition(pos.getX(), pos.getY()), " ");
     }
 }
