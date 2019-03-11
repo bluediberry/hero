@@ -16,6 +16,8 @@ public class Arena {
     private int height;
 
     private List<Wall> walls;
+    private final List<Coin> coins;
+    private final List<Monster> monsters;
 
 
     public Arena(int width, int height) {
@@ -24,6 +26,9 @@ public class Arena {
 
         hero = new Hero(width / 2, height / 2);
         this.walls = createWalls();
+        this.coins = createCoins();
+        this.monsters = createMonsters();
+
 
     }
 
@@ -44,6 +49,22 @@ public class Arena {
         return walls;
     }
 
+    private List<Monster> createMonsters() {
+        Random random = new Random();
+        ArrayList<Monster> monsters = new ArrayList<>();
+        for (int i = 0; i < 5; i++)
+            monsters.add(new Monster(random.nextInt(width - 2) + 1, random.nextInt(height - 2) + 1));
+        return monsters;
+    }
+
+    private List<Coin> createCoins() {
+        Random random = new Random();
+        ArrayList<Coin> coins = new ArrayList<>();
+        for (int i = 0; i < 5; i++)
+            coins.add(new Coin(random.nextInt(width - 2) + 1, random.nextInt(height - 2) + 1));
+        return coins;
+    }
+
     public void draw(TextGraphics graphics) {
         graphics.setBackgroundColor(TextColor.Factory.fromString("#01579B"));
         graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
@@ -51,6 +72,9 @@ public class Arena {
         hero.draw(graphics);
 
         for (Wall wall : walls) wall.draw(graphics);
+        for (Coin coin : coins) coin.draw(graphics);
+        for (Monster monster : monsters) monster.draw(graphics);
+
 
     }
 
@@ -60,14 +84,42 @@ public class Arena {
         if (key.getKeyType() == KeyType.ArrowDown) moveHero(hero.moveDown());
         if (key.getKeyType() == KeyType.ArrowLeft) moveHero(hero.moveLeft());
 
+        retrieveCoins();
+
+        verifyMonsterCollisions();
+        moveMonsters();
+        verifyMonsterCollisions();
+
     }
 
+    private void verifyMonsterCollisions() {
+        for (Monster monster : monsters)
+            if (hero.getPosition().equals(monster.getPosition())) {
+                System.out.println("You died!");
+                System.exit(0);
+            }
+    }
 
+    private void moveMonsters() {
+        for (Monster monster : monsters) {
+            Position monsterPosition = monster.move();
+            if (canHeroMove(monsterPosition))
+                monster.setPosition(monsterPosition);
+        }
+    }
 
     public void moveHero(Position position) {
         if (canHeroMove(position)) {
             hero.setPosition(position);
         }
+    }
+
+    private void retrieveCoins() {
+        for (Coin coin : coins)
+            if (hero.getPosition().equals(coin.getPosition())) {
+                coins.remove(coin);
+                break;
+            }
     }
 
     private boolean canHeroMove(Position position) {
